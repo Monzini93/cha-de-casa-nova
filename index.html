@@ -35,6 +35,7 @@
         .slide-panel {
             height: 100vh;
             height: 100dvh;
+            min-height: 0;
         }
         
         @keyframes float {
@@ -176,6 +177,10 @@
             to { stroke-dashoffset: 0; }
         }
         
+        .slide-pad-bottom {
+            padding-bottom: calc(6.75rem + env(safe-area-inset-bottom, 0px));
+        }
+        
         .dot-nav {
             padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
@@ -215,8 +220,8 @@
 
         <div id="slideTrack" class="flex flex-col w-full">
             <!-- SLIDE 0: Welcome -->
-            <section id="slide0" class="slide-panel flex flex-col justify-center items-center px-4 pt-4 pb-24 relative z-10 w-full shrink-0">
-                <div class="max-w-2xl w-full text-center flex flex-col justify-center min-h-0 flex-1 py-2 overflow-y-auto no-scrollbar">
+            <section id="slide0" class="slide-panel slide-pad-bottom flex flex-col min-h-0 items-stretch px-4 pt-3 relative z-10 w-full shrink-0">
+                <div class="max-w-2xl w-full mx-auto text-center flex flex-col justify-start min-h-0 flex-1 py-2 overflow-y-auto overscroll-y-contain touch-pan-y no-scrollbar">
                     <div class="mb-4 sm:mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
                         <div class="inline-block animate-bounce-soft">
                             <svg class="w-24 h-24 sm:w-32 sm:h-32 mx-auto house-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24">
@@ -259,8 +264,8 @@
             </section>
 
             <!-- SLIDE 1: Formulário -->
-            <section id="slide1" class="slide-panel flex flex-col relative z-10 w-full shrink-0 pt-3 pb-24">
-                <div class="flex flex-col h-full min-h-0 max-w-lg mx-auto w-full px-3 md:px-6">
+            <section id="slide1" class="slide-panel slide-pad-bottom flex flex-col min-h-0 relative z-10 w-full shrink-0 pt-3">
+                <div class="flex flex-col flex-1 min-h-0 max-w-lg mx-auto w-full px-3 md:px-6">
                     <div class="text-center shrink-0 mb-3 relative">
                         <button type="button" onclick="goToSlide(0)" class="absolute left-0 top-0 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-1 text-sm sm:text-base">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -305,8 +310,8 @@
             </section>
 
             <!-- SLIDE 2: Success -->
-            <section id="slide2" class="slide-panel flex flex-col justify-center items-center px-4 pt-4 pb-24 relative z-10 w-full shrink-0">
-                <div class="max-w-2xl w-full text-center overflow-y-auto max-h-full pb-2 no-scrollbar">
+            <section id="slide2" class="slide-panel slide-pad-bottom flex flex-col min-h-0 justify-start items-center px-4 pt-4 relative z-10 w-full shrink-0 overflow-y-auto overscroll-contain touch-pan-y">
+                <div class="max-w-2xl w-full text-center pb-2">
                     <div class="mb-4 sm:mb-6 animate-scale-in">
                         <div class="w-24 h-24 sm:w-32 sm:h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3 relative">
                             <svg class="w-12 h-12 sm:w-16 sm:h-16 text-green-500 check-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
