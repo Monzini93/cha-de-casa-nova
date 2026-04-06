@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Casa Nova - Yuri & Letícia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .font-handwriting {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes float-delayed {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(-5deg); }
+        }
+        
+        @keyframes bounce-soft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes slide-in-right {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-delayed { animation: float-delayed 5s ease-in-out infinite 1s; }
+        .animate-bounce-soft { animation: bounce-soft 2s ease-in-out infinite; }
+        .animate-wiggle { animation: wiggle 2s ease-in-out infinite; }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+        .animate-scale-in { animation: scale-in 0.5s ease-out forwards; }
+        .animate-slide-in-right { animation: slide-in-right 0.6s ease-out forwards; }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .item-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .item-card.selected {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.4);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% { opacity: 1; transform: translateY(-100px) rotate(0deg); }
+            100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .house-icon {
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        }
+        
+        .btn-confirm {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(245, 158, 11, 0.5);
+        }
+        
+        .btn-confirm:active {
+            transform: translateY(0);
+        }
+        
+        .btn-confirm::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        
+        .btn-confirm:hover::after {
+            left: 100%;
+        }
+        
+        .input-animated {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .input-animated:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .page-transition {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        
+        .page-hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+            transform: scale(0.95);
+        }
+        
+        .page-active {
+            opacity: 1;
+            pointer-events: all;
+            position: relative;
+            transform: scale(1);
+        }
+        
+        .emoji-float {
+            position: absolute;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .check-animation {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: check-draw 0.6s ease-out forwards 0.3s;
+        }
+        
+        @keyframes check-draw {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50 min-h-screen overflow-x-hidden">
+
+    <!-- Floating Emojis Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="emoji-float text-6xl animate-float top-10 left-10">🏠</div>
+        <div class="emoji-float text-5xl animate-float-delayed top-32 right-20">🎈</div>
+        <div class="emoji-float text-4xl animate-float top-1/3 left-1/4">🎉</div>
+        <div class="emoji-float text-6xl animate-float-delayed top-2/3 right-10">🎁</div>
+        <div class="emoji-float text-5xl animate-float bottom-20 left-20">🍾</div>
+        <div class="emoji-float text-4xl animate-float-delayed bottom-32 right-1/3">✨</div>
+        <div class="emoji-float text-5xl animate-float top-1/2 right-1/4">🥂</div>
+        <div class="emoji-float text-4xl animate-float-delayed bottom-10 left-1/2">🎊</div>
+    </div>
+
+    <!-- PAGE 1: Welcome -->
+    <div id="page1" class="page-transition page-active min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div class="max-w-2xl w-full text-center">
+            
+            <!-- Animated House Icon -->
+            <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="inline-block animate-bounce-soft">
+                    <svg class="w-32 h-32 mx-auto house-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.8l6 6V18h-2v-6h-4v6H8v-6H6v-7.2l6-6z"/>
+                        <path d="M12 5L5 12h2v6h4v-4h2v4h4v-6h2L12 5z" fill="#fbbf24" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Main Title -->
+            <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4 gradient-text font-handwriting leading-tight">
+                    Chá de Casa Nova
+                </h1>
+                
+                <div class="flex items-center justify-center gap-4 my-6">
+                    <span class="h-px w-16 bg-gradient-to-r from-transparent to-amber-400"></span>
+                    <span class="text-3xl text-amber-600 font-light italic">de</span>
+                    <span class="h-px w-16 bg-gradient-to-l from-transparent to-amber-400"></span>
+                </div>
+                
+                <h2 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6 animate-wiggle inline-block">
+                    Yuri <span class="text-amber-500">&</span> Letícia
+                </h2>
+            </div>
+
+            <!-- Thank You Text -->
+            <div class="glass-effect rounded-3xl p-8 mb-10 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
+                <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-4">
+                    Finalmente chegou esse momento! Depois de muita correria, conquistamos nosso cantinho e queremos comemorar com quem faz parte da nossa história.
+                </p>
+                <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-4">
+                    Sua presença já é o melhor presente, mas se quiser nos ajudar a encher essa casa de amor (e itens úteis 😄), fique à vontade!
+                </p>
+                <p class="text-amber-600 font-medium text-lg mt-4">
+                    Vamos juntos inaugurar esse novo capítulo! 🏠✨
+                </p>
+            </div>
+
+            <!-- CTA Button -->
+            <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
+                <button onclick="goToPage2()" class="btn-confirm text-white text-xl font-bold py-5 px-12 rounded-full shadow-2xl transform transition-all hover:scale-105">
+                    Confirmar Presença 🎉
+                </button>
+                <p class="text-gray-500 mt-4 text-sm">Clique aqui para escolher seu presente</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Gift Selection -->
+    <div id="page2" class="page-transition page-hidden min-h-screen p-4 md:p-8 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            
+            <!-- Header -->
+            <div class="text-center mb-8 animate-scale-in">
+                <button onclick="goToPage1()" class="absolute left-4 top-4 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Voltar
+                </button>
+                
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2 font-handwriting">Escolha seu Presente</h2>
+                <p class="text-gray-600">Selecione um ou mais itens que você gostaria de trazer</p>
+            </div>
+
+            <!-- Gift Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8" id="giftGrid">
+                <!-- Items will be generated by JS -->
+            </div>
+
+            <!-- Selected Items Summary -->
+            <div id="selectedSummary" class="hidden glass-effect rounded-2xl p-6 mb-8 animate-fade-in-up">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>✅</span> Itens Selecionados:
+                </h3>
+                <div id="selectedList" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="glass-effect rounded-3xl p-6 md:p-8 shadow-xl animate-slide-in-right">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                    <span class="text-3xl">👤</span> Seus Dados
+                </h3>
+                
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 ml-1">Nome completo</label>
+                        <input type="text" id="nomeInput" placeholder="Digite seu nome" 
+                            class="input-animated w-full px-6 py-4 rounded-2xl text-lg outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 ml-1">WhatsApp</label>
+                        <input type="tel" id="telefoneInput" placeholder="(11) 98765-4321" maxlength="15"
+                            class="input-animated w-full px-6 py-4 rounded-2xl text-lg outline-none"
+                            oninput="formatPhone(this)">
+                    </div>
+                </div>
+
+                <button onclick="confirmarPresenca()" id="btnConfirmar" 
+                    class="w-full btn-confirm text-white text-xl font-bold py-5 rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                    Confirmar Presença 🚀
+                </button>
+                
+                <p class="text-center text-gray-500 mt-4 text-sm">
+                    Você poderá alterar sua escolha depois se precisar!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: Success & Info -->
+    <div id="page3" class="page-transition page-hidden min-h-screen flex items-center justify-center p-4 relative z-10">
+        <div class="max-w-2xl w-full text-center">
+            
+            <!-- Success Animation -->
+            <div class="mb-8 animate-scale-in">
+                <div class="w-32 h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4 relative">
+                    <svg class="w-16 h-16 text-green-500 check-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <div class="absolute inset-0 border-4 border-green-300 rounded-full animate-ping opacity-25"></div>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Presença Confirmada!</h2>
+                <p class="text-xl text-gray-600">Obrigado por fazer parte desse momento! 💛</p>
+            </div>
+
+            <!-- Event Details Cards -->
+            <div class="space-y-4 mb-8">
+                <!-- Date & Time -->
+                <div class="glass-effect rounded-2xl p-6 md:p-8 animate-fade-in-up shadow-xl" style="animation-delay: 0.2s;">
+                    <div class="text-5xl mb-4">📅</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Quando?</h3>
+                    <p class="text-3xl md:text-4xl font-bold text-amber-600 mb-1">18 de Abril</p>
+                    <p class="text-xl text-gray-600">Sábado às <span class="font-bold text-2xl text-amber-500">15h</span></p>
+                    <div class="mt-4 inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium">
+                        <span>⏰</span> Não se atrase! A casa nova espera! 😄
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <div class="glass-effect rounded-2xl p-6 md:p-8 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
+                    <div class="text-5xl mb-4">📍</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Onde?</h3>
+                    <p class="text-xl md:text-2xl text-gray-700 font-medium mb-4">
+                        Av. Córrego do Jacu, 277<br>
+                        <span class="text-amber-600">Itaquera - São Paulo</span>
+                    </p>
+                    
+                    <a href="https://www.google.com/maps/search/?api=1&query=Av.+Córrego+do+Jacu,+277,+Itaquera,+São+Paulo" 
+                       target="_blank"
+                       class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg">
+                        <span>🗺️</span> Abrir no Google Maps
+                    </a>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
+                <div class="bg-white/50 rounded-2xl p-6 backdrop-blur-sm">
+                    <p class="text-gray-600 mb-4">
+                        Qualquer dúvida, é só chamar no WhatsApp! 📱
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="location.reload()" class="text-amber-600 hover:text-amber-700 font-medium underline">
+                            Voltar ao início
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Celebration Emojis -->
+            <div class="fixed bottom-10 left-1/2 transform -translate-x-1/2 flex gap-4 text-4xl animate-bounce-soft">
+                <span>🎉</span>
+                <span>🏠</span>
+                <span>🎊</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gift Items Data
+        const giftItems = [
+            { id: 1, emoji: '🍳', nome: 'Panela', desc: 'Panela antiaderente' },
+            { id: 2, emoji: '🍽️', nome: 'Pratos', desc: 'Jogo de pratos' },
+            { id: 3, emoji: '🥃', nome: 'Copos', desc: 'Jogo de copos' },
+            { id: 4, emoji: '🍴', nome: 'Talheres', desc: 'Faqueiro completo' },
+            { id: 5, emoji: '🛏️', nome: 'Lençóis', desc: 'Jogo de cama' },
+            { id: 6, emoji: '🧴', nome: 'Toalhas', desc: 'Jogo de toalhas' },
+            { id: 7, emoji: '🪴', nome: 'Plantas', desc: 'Plantas decorativas' },
+            { id: 8, emoji: '🕯️', nome: 'Velas', desc: 'Velas aromáticas' },
+            { id: 9, emoji: '🖼️', nome: 'Quadros', desc: 'Quadros decorativos' },
+            { id: 10, emoji: '🧹', nome: 'Vassoura', desc: 'Kit limpeza' },
+            { id: 11, emoji: '🗑️', nome: 'Lixeiras', desc: 'Lixeiras para casa' },
+            { id: 12, emoji: '💡', nome: 'Luminárias', desc: 'Abajures/luzes' }
+        ];
+
+        let selectedItems = [];
+
+        // Initialize Gift Grid
+        function initGiftGrid() {
+            const grid = document.getElementById('giftGrid');
+            grid.innerHTML = giftItems.map((item, index) => `
+                <div onclick="toggleItem(${item.id})" 
+                     id="item-${item.id}"
+                     class="item-card bg-white rounded-2xl p-4 cursor-pointer border-2 border-transparent shadow-md hover:shadow-xl"
+                     style="animation: fade-in-up 0.5s ease-out forwards; animation-delay: ${index * 0.05}s; opacity: 0;">
+                    <div class="text-4xl mb-2">${item.emoji}</div>
+                    <h4 class="font-bold text-gray-800 text-sm md:text-base">${item.nome}</h4>
+                    <p class="text-xs text-gray-500 mt-1">${item.desc}</p>
+                    <div class="check-icon hidden mt-2 text-white text-xl">✓</div>
+                </div>
+            `).join('');
+        }
+
+        function toggleItem(id) {
+            const element = document.getElementById(`item-${id}`);
+            const item = giftItems.find(i => i.id === id);
+            
+            if (selectedItems.find(i => i.id === id)) {
+                selectedItems = selectedItems.filter(i => i.id !== id);
+                element.classList.remove('selected');
+                element.querySelector('.check-icon').classList.add('hidden');
+            } else {
+                selectedItems.push(item);
+                element.classList.add('selected');
+                element.querySelector('.check-icon').classList.remove('hidden');
+                
+                // Small bounce animation
+                element.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    element.style.transform = '';
+                }, 200);
+            }
+            
+            updateSelectedSummary();
+            createConfetti(element);
+        }
+
+        function updateSelectedSummary() {
+            const summary = document.getElementById('selectedSummary');
+            const list = document.getElementById('selectedList');
+            
+            if (selectedItems.length === 0) {
+                summary.classList.add('hidden');
+                return;
+            }
+            
+            summary.classList.remove('hidden');
+            list.innerHTML = selectedItems.map(item => `
+                <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
+                    ${item.emoji} ${item.nome}
+                </span>
+            `).join('');
+        }
+
+        function formatPhone(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 7) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+            } else if (value.length > 2) {
+                value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            }
+            
+            input.value = value;
+        }
+
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            const colors = ['#fbbf24', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'];
+            
+            for (let i = 0; i < 10; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = rect.left + rect.width / 2 + 'px';
+                confetti.style.top = rect.top + rect.height / 2 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function goToPage2() {
+            document.getElementById('page1').classList.remove('page-active');
+            document.getElementById('page1').classList.add('page-hidden');
+            
+            setTimeout(() => {
+                document.getElementById('page2').classList.remove('page-hidden');
+                document.getElementById('page2').classList.add('page-active');
+                initGiftGrid();
+            }, 300);
+        }
+
+        function goToPage1() {
+            document.getElementById('page2').classList.remove('page-active');
+            document.getElementById('page2').classList.add('page-hidden');
+            
+            setTimeout(() => {
+                document.getElementById('page1').classList.remove('page-hidden');
+                document.getElementById('page1').classList.add('page-active');
+            }, 300);
+        }
+
+        function confirmarPresenca() {
+            const nome = document.getElementById('nomeInput').value.trim();
+            const telefone = document.getElementById('telefoneInput').value.trim();
+            
+            if (!nome || nome.length < 3) {
+                shakeInput(document.getElementById('nomeInput'));
+                return;
+            }
+            
+            if (telefone.length < 14) {
+                shakeInput(document.getElementById('telefoneInput'));
+                return;
+            }
+
+            // Simulate sending data
+            const btn = document.getElementById('btnConfirmar');
+            btn.innerHTML = 'Enviando... ⏳';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('page2').classList.remove('page-active');
+                document.getElementById('page2').classList.add('page-hidden');
+                
+                setTimeout(() => {
+                    document.getElementById('page3').classList.remove('page-hidden');
+                    document.getElementById('page3').classList.add('page-active');
+                    createCelebrationConfetti();
+                }, 300);
+            }, 1500);
+        }
+
+        function shakeInput(input) {
+            input.style.animation = 'wiggle 0.5s ease-in-out';
+            input.style.borderColor = '#ef4444';
+            setTimeout(() => {
+                input.style.animation = '';
+                input.style.borderColor = '';
+            }, 500);
+        }
+
+        function createCelebrationConfetti() {
+            const colors = ['#fbbf24', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981', '#3b82f6'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
+        }
+
+        // Add enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('page2').classList.contains('page-active')) {
+                confirmarPresenca();
+            }
+        });
+    </script>
+</body>
+</html>
