@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Chá de Casa Nova - Yuri & Letícia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,8 +11,30 @@
             font-family: 'Poppins', sans-serif;
         }
         
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+            touch-action: pan-y;
+        }
+        
         .font-handwriting {
             font-family: 'Pacifico', cursive;
+        }
+        
+        #viewport {
+            height: 100vh;
+            height: 100dvh;
+        }
+        
+        #slideTrack {
+            will-change: transform;
+            transition: transform 0.55s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        
+        .slide-panel {
+            height: 100vh;
+            height: 100dvh;
         }
         
         @keyframes float {
@@ -64,27 +86,13 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
-        .item-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .item-card:hover {
-            transform: translateY(-5px) scale(1.02);
-        }
-        
-        .item-card.selected {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 20px 25px -5px rgba(251, 191, 36, 0.4);
-        }
-        
         .confetti {
             position: fixed;
             width: 10px;
             height: 10px;
             pointer-events: none;
             animation: confetti-fall 3s ease-out forwards;
+            z-index: 100;
         }
         
         @keyframes confetti-fall {
@@ -152,25 +160,6 @@
             transform: scale(1.02);
         }
         
-        .page-transition {
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        }
-        
-        .page-hidden {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
-            width: 100%;
-            transform: scale(0.95);
-        }
-        
-        .page-active {
-            opacity: 1;
-            pointer-events: all;
-            position: relative;
-            transform: scale(1);
-        }
-        
         .emoji-float {
             position: absolute;
             opacity: 0.6;
@@ -186,363 +175,343 @@
         @keyframes check-draw {
             to { stroke-dashoffset: 0; }
         }
+        
+        .dot-nav {
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        }
+        
+        .dot-btn {
+            width: 10px;
+            height: 10px;
+            border-radius: 9999px;
+            background: rgba(245, 158, 11, 0.35);
+            transition: transform 0.3s ease, background 0.3s ease, width 0.3s ease;
+        }
+        
+        .dot-btn.active {
+            background: #f59e0b;
+            width: 28px;
+        }
+        
+        .dot-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50 min-h-screen overflow-x-hidden">
+<body class="bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50">
 
-    <!-- Floating Emojis Background -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="emoji-float text-6xl animate-float top-10 left-10">🏠</div>
-        <div class="emoji-float text-5xl animate-float-delayed top-32 right-20">🎈</div>
-        <div class="emoji-float text-4xl animate-float top-1/3 left-1/4">🎉</div>
-        <div class="emoji-float text-6xl animate-float-delayed top-2/3 right-10">🎁</div>
-        <div class="emoji-float text-5xl animate-float bottom-20 left-20">🍾</div>
-        <div class="emoji-float text-4xl animate-float-delayed bottom-32 right-1/3">✨</div>
-        <div class="emoji-float text-5xl animate-float top-1/2 right-1/4">🥂</div>
-        <div class="emoji-float text-4xl animate-float-delayed bottom-10 left-1/2">🎊</div>
-    </div>
-
-    <!-- PAGE 1: Welcome -->
-    <div id="page1" class="page-transition page-active min-h-screen flex items-center justify-center p-4 relative z-10">
-        <div class="max-w-2xl w-full text-center">
-            
-            <!-- Animated House Icon -->
-            <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.1s;">
-                <div class="inline-block animate-bounce-soft">
-                    <svg class="w-32 h-32 mx-auto house-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.8l6 6V18h-2v-6h-4v6H8v-6H6v-7.2l6-6z"/>
-                        <path d="M12 5L5 12h2v6h4v-4h2v4h4v-6h2L12 5z" fill="#fbbf24" opacity="0.3"/>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Main Title -->
-            <div class="mb-8 animate-fade-in-up" style="animation-delay: 0.2s;">
-                <h1 class="text-5xl md:text-7xl font-bold mb-4 gradient-text font-handwriting leading-tight">
-                    Chá de Casa Nova
-                </h1>
-                
-                <div class="flex items-center justify-center gap-4 my-6">
-                    <span class="h-px w-16 bg-gradient-to-r from-transparent to-amber-400"></span>
-                    <span class="text-3xl text-amber-600 font-light italic">de</span>
-                    <span class="h-px w-16 bg-gradient-to-l from-transparent to-amber-400"></span>
-                </div>
-                
-                <h2 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6 animate-wiggle inline-block">
-                    Yuri <span class="text-amber-500">&</span> Letícia
-                </h2>
-            </div>
-
-            <!-- Thank You Text -->
-            <div class="glass-effect rounded-3xl p-8 mb-10 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
-                <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-4">
-                    Finalmente chegou esse momento! Depois de muita correria, conquistamos nosso cantinho e queremos comemorar com quem faz parte da nossa história.
-                </p>
-                <p class="text-lg md:text-xl text-gray-700 leading-relaxed mb-4">
-                    Sua presença já é o melhor presente, mas se quiser nos ajudar a encher essa casa de amor (e itens úteis 😄), fique à vontade!
-                </p>
-                <p class="text-amber-600 font-medium text-lg mt-4">
-                    Vamos juntos inaugurar esse novo capítulo! 🏠✨
-                </p>
-            </div>
-
-            <!-- CTA Button -->
-            <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
-                <button onclick="goToPage2()" class="btn-confirm text-white text-xl font-bold py-5 px-12 rounded-full shadow-2xl transform transition-all hover:scale-105">
-                    Confirmar Presença 🎉
-                </button>
-                <p class="text-gray-500 mt-4 text-sm">Clique aqui para escolher seu presente</p>
-            </div>
+    <div id="viewport" class="relative w-full overflow-hidden z-0">
+        <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="emoji-float text-5xl sm:text-6xl animate-float top-8 left-6 sm:left-10">🏠</div>
+            <div class="emoji-float text-4xl sm:text-5xl animate-float-delayed top-24 right-12 sm:right-20">🎈</div>
+            <div class="emoji-float text-3xl sm:text-4xl animate-float top-1/3 left-1/4">🎉</div>
+            <div class="emoji-float text-5xl sm:text-6xl animate-float-delayed top-2/3 right-8">🎁</div>
+            <div class="emoji-float text-4xl sm:text-5xl animate-float bottom-28 left-10">🍾</div>
+            <div class="emoji-float text-3xl sm:text-4xl animate-float-delayed bottom-36 right-1/4">✨</div>
+            <div class="emoji-float text-4xl sm:text-5xl animate-float top-1/2 right-1/4">🥂</div>
+            <div class="emoji-float text-3xl sm:text-4xl animate-float-delayed bottom-16 left-1/2">🎊</div>
         </div>
-    </div>
 
-    <!-- PAGE 2: Gift Selection -->
-    <div id="page2" class="page-transition page-hidden min-h-screen p-4 md:p-8 relative z-10">
-        <div class="max-w-4xl mx-auto">
-            
-            <!-- Header -->
-            <div class="text-center mb-8 animate-scale-in">
-                <button onclick="goToPage1()" class="absolute left-4 top-4 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    Voltar
-                </button>
-                
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2 font-handwriting">Escolha seu Presente</h2>
-                <p class="text-gray-600">Selecione um ou mais itens que você gostaria de trazer</p>
-            </div>
-
-            <!-- Gift Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8" id="giftGrid">
-                <!-- Items will be generated by JS -->
-            </div>
-
-            <!-- Selected Items Summary -->
-            <div id="selectedSummary" class="hidden glass-effect rounded-2xl p-6 mb-8 animate-fade-in-up">
-                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                    <span>✅</span> Itens Selecionados:
-                </h3>
-                <div id="selectedList" class="flex flex-wrap gap-2"></div>
-            </div>
-
-            <!-- Contact Form -->
-            <div class="glass-effect rounded-3xl p-6 md:p-8 shadow-xl animate-slide-in-right">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                    <span class="text-3xl">👤</span> Seus Dados
-                </h3>
-                
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-2 ml-1">Nome completo</label>
-                        <input type="text" id="nomeInput" placeholder="Digite seu nome" 
-                            class="input-animated w-full px-6 py-4 rounded-2xl text-lg outline-none">
+        <div id="slideTrack" class="flex flex-col w-full">
+            <!-- SLIDE 0: Welcome -->
+            <section id="slide0" class="slide-panel flex flex-col justify-center items-center px-4 pt-4 pb-24 relative z-10 w-full shrink-0">
+                <div class="max-w-2xl w-full text-center flex flex-col justify-center min-h-0 flex-1 py-2 overflow-y-auto no-scrollbar">
+                    <div class="mb-4 sm:mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+                        <div class="inline-block animate-bounce-soft">
+                            <svg class="w-24 h-24 sm:w-32 sm:h-32 mx-auto house-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm0 2.8l6 6V18h-2v-6h-4v6H8v-6H6v-7.2l6-6z"/>
+                                <path d="M12 5L5 12h2v6h4v-4h2v4h4v-6h2L12 5z" fill="#fbbf24" opacity="0.3"/>
+                            </svg>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <label class="block text-gray-700 font-medium mb-2 ml-1">WhatsApp</label>
-                        <input type="tel" id="telefoneInput" placeholder="(11) 98765-4321" maxlength="15"
-                            class="input-animated w-full px-6 py-4 rounded-2xl text-lg outline-none"
-                            oninput="formatPhone(this)">
+                    <div class="mb-4 sm:mb-6 animate-fade-in-up" style="animation-delay: 0.2s;">
+                        <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-2 sm:mb-4 gradient-text font-handwriting leading-tight">
+                            Chá de Casa Nova
+                        </h1>
+                        <div class="flex items-center justify-center gap-3 sm:gap-4 my-3 sm:my-4">
+                            <span class="h-px w-12 sm:w-16 bg-gradient-to-r from-transparent to-amber-400"></span>
+                            <span class="text-2xl sm:text-3xl text-amber-600 font-light italic">de</span>
+                            <span class="h-px w-12 sm:w-16 bg-gradient-to-l from-transparent to-amber-400"></span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-800 mb-4 sm:mb-6 animate-wiggle inline-block">
+                            Yuri <span class="text-amber-500">&</span> Letícia
+                        </h2>
                     </div>
-                </div>
-
-                <button onclick="confirmarPresenca()" id="btnConfirmar" 
-                    class="w-full btn-confirm text-white text-xl font-bold py-5 rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
-                    Confirmar Presença 🚀
-                </button>
-                
-                <p class="text-center text-gray-500 mt-4 text-sm">
-                    Você poderá alterar sua escolha depois se precisar!
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- PAGE 3: Success & Info -->
-    <div id="page3" class="page-transition page-hidden min-h-screen flex items-center justify-center p-4 relative z-10">
-        <div class="max-w-2xl w-full text-center">
-            
-            <!-- Success Animation -->
-            <div class="mb-8 animate-scale-in">
-                <div class="w-32 h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4 relative">
-                    <svg class="w-16 h-16 text-green-500 check-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                    </svg>
-                    <div class="absolute inset-0 border-4 border-green-300 rounded-full animate-ping opacity-25"></div>
-                </div>
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Presença Confirmada!</h2>
-                <p class="text-xl text-gray-600">Obrigado por fazer parte desse momento! 💛</p>
-            </div>
-
-            <!-- Event Details Cards -->
-            <div class="space-y-4 mb-8">
-                <!-- Date & Time -->
-                <div class="glass-effect rounded-2xl p-6 md:p-8 animate-fade-in-up shadow-xl" style="animation-delay: 0.2s;">
-                    <div class="text-5xl mb-4">📅</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Quando?</h3>
-                    <p class="text-3xl md:text-4xl font-bold text-amber-600 mb-1">18 de Abril</p>
-                    <p class="text-xl text-gray-600">Sábado às <span class="font-bold text-2xl text-amber-500">15h</span></p>
-                    <div class="mt-4 inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-medium">
-                        <span>⏰</span> Não se atrase! A casa nova espera! 😄
+                    <div class="glass-effect rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-4 sm:mb-6 animate-fade-in-up shadow-xl text-left sm:text-center" style="animation-delay: 0.4s;">
+                        <p class="text-sm sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-2 sm:mb-4">
+                            Finalmente chegou esse momento! Depois de muita correria, conquistamos nosso cantinho e queremos comemorar com quem faz parte da nossa história.
+                        </p>
+                        <p class="text-sm sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-2 sm:mb-4">
+                            Sua presença já é o melhor presente, mas se quiser nos ajudar a encher essa casa de amor (e itens úteis 😄), fique à vontade!
+                        </p>
+                        <p class="text-amber-600 font-medium text-base sm:text-lg mt-2">
+                            Vamos juntos inaugurar esse novo capítulo! 🏠✨
+                        </p>
                     </div>
-                </div>
-
-                <!-- Address -->
-                <div class="glass-effect rounded-2xl p-6 md:p-8 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
-                    <div class="text-5xl mb-4">📍</div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Onde?</h3>
-                    <p class="text-xl md:text-2xl text-gray-700 font-medium mb-4">
-                        Av. Córrego do Jacu, 277<br>
-                        <span class="text-amber-600">Itaquera - São Paulo</span>
-                    </p>
-                    
-                    <a href="https://www.google.com/maps/search/?api=1&query=Av.+Córrego+do+Jacu,+277,+Itaquera,+São+Paulo" 
-                       target="_blank"
-                       class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg">
-                        <span>🗺️</span> Abrir no Google Maps
-                    </a>
-                </div>
-            </div>
-
-            <!-- Additional Info -->
-            <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
-                <div class="bg-white/50 rounded-2xl p-6 backdrop-blur-sm">
-                    <p class="text-gray-600 mb-4">
-                        Qualquer dúvida, é só chamar no WhatsApp! 📱
-                    </p>
-                    <div class="flex justify-center gap-4">
-                        <button onclick="location.reload()" class="text-amber-600 hover:text-amber-700 font-medium underline">
-                            Voltar ao início
+                    <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
+                        <button type="button" onclick="goToSlide(1)" class="btn-confirm text-white text-lg sm:text-xl font-bold py-4 px-10 sm:py-5 sm:px-12 rounded-full shadow-2xl transform transition-all hover:scale-105">
+                            Confirmar Presença 🎉
                         </button>
+                        <p class="text-gray-500 mt-3 text-xs sm:text-sm">Ou deslize para cima · bolinhas abaixo</p>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Celebration Emojis -->
-            <div class="fixed bottom-10 left-1/2 transform -translate-x-1/2 flex gap-4 text-4xl animate-bounce-soft">
-                <span>🎉</span>
-                <span>🏠</span>
-                <span>🎊</span>
-            </div>
+            <!-- SLIDE 1: Formulário -->
+            <section id="slide1" class="slide-panel flex flex-col relative z-10 w-full shrink-0 pt-3 pb-24">
+                <div class="flex flex-col h-full min-h-0 max-w-lg mx-auto w-full px-3 md:px-6">
+                    <div class="text-center shrink-0 mb-3 relative">
+                        <button type="button" onclick="goToSlide(0)" class="absolute left-0 top-0 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-1 text-sm sm:text-base">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            Voltar
+                        </button>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-1 font-handwriting pt-8 sm:pt-0">Sua presença</h2>
+                        <p class="text-gray-600 text-xs sm:text-base">Preencha os dados · deslize para mudar de tela</p>
+                    </div>
+                    <div id="page2Scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y -webkit-overflow-scrolling-touch px-1">
+                        <div class="glass-effect rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl animate-slide-in-right mb-2">
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <span class="text-2xl">📝</span> Confirme e diga o que vai levar
+                            </h3>
+                            <div class="space-y-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-1 text-sm ml-1" for="nomeInput">Nome completo</label>
+                                    <input type="text" id="nomeInput" name="nome" placeholder="Digite seu nome" autocomplete="name"
+                                        class="input-animated w-full px-4 py-3 rounded-xl sm:rounded-2xl text-base outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-1 text-sm ml-1" for="telefoneInput">WhatsApp</label>
+                                    <input type="tel" id="telefoneInput" name="telefone" placeholder="(11) 98765-4321" maxlength="15" inputmode="numeric"
+                                        class="input-animated w-full px-4 py-3 rounded-xl sm:rounded-2xl text-base outline-none"
+                                        oninput="formatPhone(this)">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-1 text-sm ml-1" for="presenteInput">O que você vai levar?</label>
+                                    <textarea id="presenteInput" name="presente" rows="4" placeholder="Descreva o presente ou o que pretende contribuir"
+                                        class="input-animated w-full px-4 py-3 rounded-xl sm:rounded-2xl text-base outline-none resize-none min-h-[100px]"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" onclick="confirmarPresenca()" id="btnConfirmar"
+                                class="w-full btn-confirm text-white text-lg sm:text-xl font-bold py-4 rounded-xl sm:rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                                Confirmar presença 🚀
+                            </button>
+                            <p class="text-center text-gray-500 mt-3 text-xs sm:text-sm">
+                                Seu nome e o que vai levar entram na lista do chá para todo mundo ver.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Success -->
+            <section id="slide2" class="slide-panel flex flex-col justify-center items-center px-4 pt-4 pb-24 relative z-10 w-full shrink-0">
+                <div class="max-w-2xl w-full text-center overflow-y-auto max-h-full pb-2 no-scrollbar">
+                    <div class="mb-4 sm:mb-6 animate-scale-in">
+                        <div class="w-24 h-24 sm:w-32 sm:h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3 relative">
+                            <svg class="w-12 h-12 sm:w-16 sm:h-16 text-green-500 check-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <div class="absolute inset-0 border-4 border-green-300 rounded-full animate-ping opacity-25"></div>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-1">Presença confirmada!</h2>
+                        <p class="text-base sm:text-xl text-gray-600">Obrigado por fazer parte desse momento! 💛</p>
+                    </div>
+                    <div class="space-y-3 sm:space-y-4 mb-4 text-left sm:text-center">
+                        <div class="glass-effect rounded-2xl p-4 sm:p-6 animate-fade-in-up shadow-xl" style="animation-delay: 0.2s;">
+                            <div class="text-4xl mb-2 text-center">📅</div>
+                            <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1">Quando?</h3>
+                            <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-600">19 de abril</p>
+                            <p class="text-base sm:text-xl text-gray-600">Domingo às <span class="font-bold text-xl text-amber-500">15h</span></p>
+                            <div class="mt-2 inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium">
+                                <span>⏰</span> Não se atrase! 😄
+                            </div>
+                        </div>
+                        <div class="glass-effect rounded-2xl p-4 sm:p-6 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
+                            <div class="text-4xl mb-2 text-center">📍</div>
+                            <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1">Onde?</h3>
+                            <p class="text-base sm:text-lg md:text-2xl text-gray-700 font-medium mb-3">
+                                Av. Córrego do Jacu, 277<br>
+                                <span class="text-amber-600">Itaquera — São Paulo</span>
+                            </p>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Av.+Córrego+do+Jacu,+277,+Itaquera,+São+Paulo"
+                               target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-full font-bold text-sm sm:text-base transition-all transform hover:scale-105 shadow-lg">
+                                <span>🗺️</span> Abrir no Google Maps
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="glass-effect rounded-2xl p-4 sm:p-6 mb-4 text-left shadow-xl border border-white/40">
+                        <div class="text-3xl mb-2 text-center">🎁</div>
+                        <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1 text-center">O que já foi combinado</h3>
+                        <p class="text-xs text-gray-500 text-center mb-4">Lista atualizada com quem já confirmou pelo site.</p>
+                        <div id="listaPresentesEmpty" class="text-center text-gray-500 text-sm py-4">
+                            Ninguém registrou ainda por aqui.
+                        </div>
+                        <ul id="listaPresentes" class="space-y-3 hidden" aria-live="polite"></ul>
+                    </div>
+
+                    <div class="bg-white/50 rounded-2xl p-4 backdrop-blur-sm mb-3">
+                        <p class="text-gray-600 text-sm sm:text-base mb-3">Qualquer dúvida, chama no WhatsApp! 📱</p>
+                        <div class="flex justify-center gap-4 flex-wrap">
+                            <button type="button" onclick="reiniciar()" class="text-amber-600 hover:text-amber-700 font-medium underline text-sm">
+                                Voltar ao início
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-center gap-3 text-3xl sm:text-4xl animate-bounce-soft pb-2">
+                        <span>🎉</span><span>🏠</span><span>🎊</span>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+
+    <!-- Indicadores -->
+    <nav class="dot-nav fixed bottom-0 left-0 right-0 z-50 flex justify-center items-center gap-3 bg-gradient-to-t from-orange-50/95 via-amber-50/80 to-transparent pt-6 pointer-events-auto" aria-label="Navegação entre telas">
+        <button type="button" class="dot-btn active" id="dot0" onclick="goToSlide(0)" aria-label="Tela 1 — Boas-vindas" title="Boas-vindas"></button>
+        <button type="button" class="dot-btn" id="dot1" onclick="goToSlide(1)" aria-label="Tela 2 — Formulário" title="Formulário"></button>
+        <button type="button" class="dot-btn" id="dot2" onclick="goToSlide(2)" aria-label="Tela 3 — Confirmação" title="Confirmação" disabled></button>
+    </nav>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 
     <script>
-        // Gift Items Data
-        const giftItems = [
-            { id: 1, emoji: '🍳', nome: 'Panela', desc: 'Panela antiaderente' },
-            { id: 2, emoji: '🍽️', nome: 'Pratos', desc: 'Jogo de pratos' },
-            { id: 3, emoji: '🥃', nome: 'Copos', desc: 'Jogo de copos' },
-            { id: 4, emoji: '🍴', nome: 'Talheres', desc: 'Faqueiro completo' },
-            { id: 5, emoji: '🛏️', nome: 'Lençóis', desc: 'Jogo de cama' },
-            { id: 6, emoji: '🧴', nome: 'Toalhas', desc: 'Jogo de toalhas' },
-            { id: 7, emoji: '🪴', nome: 'Plantas', desc: 'Plantas decorativas' },
-            { id: 8, emoji: '🕯️', nome: 'Velas', desc: 'Velas aromáticas' },
-            { id: 9, emoji: '🖼️', nome: 'Quadros', desc: 'Quadros decorativos' },
-            { id: 10, emoji: '🧹', nome: 'Vassoura', desc: 'Kit limpeza' },
-            { id: 11, emoji: '🗑️', nome: 'Lixeiras', desc: 'Lixeiras para casa' },
-            { id: 12, emoji: '💡', nome: 'Luminárias', desc: 'Abajures/luzes' }
-        ];
+        const TOTAL = 3;
+        let currentSlide = 0;
+        let confirmed = false;
 
-        let selectedItems = [];
+        const slideTrack = document.getElementById('slideTrack');
+        const page2Scroll = document.getElementById('page2Scroll');
+        const API_PRESENTES = '/api/presentes';
 
-        // Initialize Gift Grid
-        function initGiftGrid() {
-            const grid = document.getElementById('giftGrid');
-            grid.innerHTML = giftItems.map((item, index) => `
-                <div onclick="toggleItem(${item.id})" 
-                     id="item-${item.id}"
-                     class="item-card bg-white rounded-2xl p-4 cursor-pointer border-2 border-transparent shadow-md hover:shadow-xl"
-                     style="animation: fade-in-up 0.5s ease-out forwards; animation-delay: ${index * 0.05}s; opacity: 0;">
-                    <div class="text-4xl mb-2">${item.emoji}</div>
-                    <h4 class="font-bold text-gray-800 text-sm md:text-base">${item.nome}</h4>
-                    <p class="text-xs text-gray-500 mt-1">${item.desc}</p>
-                    <div class="check-icon hidden mt-2 text-white text-xl">✓</div>
-                </div>
-            `).join('');
+        function applyTransform() {
+            slideTrack.style.transform = `translateY(-${(100 / TOTAL) * currentSlide}%)`;
         }
 
-        function toggleItem(id) {
-            const element = document.getElementById(`item-${id}`);
-            const item = giftItems.find(i => i.id === id);
-            
-            if (selectedItems.find(i => i.id === id)) {
-                selectedItems = selectedItems.filter(i => i.id !== id);
-                element.classList.remove('selected');
-                element.querySelector('.check-icon').classList.add('hidden');
-            } else {
-                selectedItems.push(item);
-                element.classList.add('selected');
-                element.querySelector('.check-icon').classList.remove('hidden');
-                
-                // Small bounce animation
-                element.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    element.style.transform = '';
-                }, 200);
+        function escapeHtml(s) {
+            const d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        async function fetchListaPresentes() {
+            const res = await fetch(API_PRESENTES);
+            if (!res.ok) return [];
+            const data = await res.json();
+            return Array.isArray(data) ? data : [];
+        }
+
+        async function renderListaPresentes() {
+            const ul = document.getElementById('listaPresentes');
+            const empty = document.getElementById('listaPresentesEmpty');
+            let list = [];
+            try {
+                list = await fetchListaPresentes();
+            } catch {
+                list = [];
             }
-            
-            updateSelectedSummary();
-            createConfetti(element);
-        }
-
-        function updateSelectedSummary() {
-            const summary = document.getElementById('selectedSummary');
-            const list = document.getElementById('selectedList');
-            
-            if (selectedItems.length === 0) {
-                summary.classList.add('hidden');
+            if (list.length === 0) {
+                empty.classList.remove('hidden');
+                ul.classList.add('hidden');
+                ul.innerHTML = '';
                 return;
             }
-            
-            summary.classList.remove('hidden');
-            list.innerHTML = selectedItems.map(item => `
-                <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                    ${item.emoji} ${item.nome}
-                </span>
+            empty.classList.add('hidden');
+            ul.classList.remove('hidden');
+            ul.innerHTML = list.map((e) => `
+                <li class="bg-white/60 rounded-xl px-4 py-3 border border-amber-100/80 shadow-sm">
+                    <p class="font-semibold text-gray-800 text-sm sm:text-base">${escapeHtml(e.nome || '')}</p>
+                    <p class="text-gray-600 text-sm mt-1 whitespace-pre-wrap break-words">${escapeHtml(e.presente || '')}</p>
+                </li>
             `).join('');
+        }
+
+        function canGoToSlide(index) {
+            if (index < 0 || index >= TOTAL) return false;
+            if (index === 2 && !confirmed) return false;
+            return true;
+        }
+
+        function goToSlide(index) {
+            if (!canGoToSlide(index)) return;
+            if (index === currentSlide) return;
+            currentSlide = index;
+            applyTransform();
+            for (let i = 0; i < TOTAL; i++) {
+                document.getElementById('dot' + i).classList.toggle('active', i === currentSlide);
+            }
+            document.getElementById('dot2').disabled = !confirmed;
+            if (currentSlide === 2) void renderListaPresentes();
+        }
+
+        function goNext() {
+            if (currentSlide < TOTAL - 1 && canGoToSlide(currentSlide + 1)) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+
+        function goPrev() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
         }
 
         function formatPhone(input) {
             let value = input.value.replace(/\D/g, '');
             if (value.length > 11) value = value.slice(0, 11);
-            
             if (value.length > 7) {
                 value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
             } else if (value.length > 2) {
                 value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
             }
-            
             input.value = value;
         }
 
-        function createConfetti(element) {
-            const rect = element.getBoundingClientRect();
-            const colors = ['#fbbf24', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981'];
-            
-            for (let i = 0; i < 10; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = rect.left + rect.width / 2 + 'px';
-                confetti.style.top = rect.top + rect.height / 2 + 'px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 3000);
-            }
-        }
-
-        function goToPage2() {
-            document.getElementById('page1').classList.remove('page-active');
-            document.getElementById('page1').classList.add('page-hidden');
-            
-            setTimeout(() => {
-                document.getElementById('page2').classList.remove('page-hidden');
-                document.getElementById('page2').classList.add('page-active');
-                initGiftGrid();
-            }, 300);
-        }
-
-        function goToPage1() {
-            document.getElementById('page2').classList.remove('page-active');
-            document.getElementById('page2').classList.add('page-hidden');
-            
-            setTimeout(() => {
-                document.getElementById('page1').classList.remove('page-hidden');
-                document.getElementById('page1').classList.add('page-active');
-            }, 300);
-        }
-
-        function confirmarPresenca() {
+        async function confirmarPresenca() {
             const nome = document.getElementById('nomeInput').value.trim();
             const telefone = document.getElementById('telefoneInput').value.trim();
-            
+            const presente = document.getElementById('presenteInput').value.trim();
             if (!nome || nome.length < 3) {
                 shakeInput(document.getElementById('nomeInput'));
                 return;
             }
-            
             if (telefone.length < 14) {
                 shakeInput(document.getElementById('telefoneInput'));
                 return;
             }
-
-            // Simulate sending data
+            if (!presente || presente.length < 3) {
+                shakeInput(document.getElementById('presenteInput'));
+                return;
+            }
             const btn = document.getElementById('btnConfirmar');
             btn.innerHTML = 'Enviando... ⏳';
             btn.disabled = true;
-
-            setTimeout(() => {
-                document.getElementById('page2').classList.remove('page-active');
-                document.getElementById('page2').classList.add('page-hidden');
-                
-                setTimeout(() => {
-                    document.getElementById('page3').classList.remove('page-hidden');
-                    document.getElementById('page3').classList.add('page-active');
-                    createCelebrationConfetti();
-                }, 300);
-            }, 1500);
+            try {
+                const res = await fetch(API_PRESENTES, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, whatsapp: telefone, presente })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(data.error || 'Erro ao salvar');
+                }
+                confirmed = true;
+                document.getElementById('dot2').disabled = false;
+                goToSlide(2);
+                createCelebrationConfetti();
+            } catch (err) {
+                alert('Não foi possível salvar agora. Verifique a conexão ou tente de novo em instantes.');
+                console.error(err);
+            } finally {
+                btn.innerHTML = 'Confirmar presença 🚀';
+                btn.disabled = false;
+            }
         }
 
         function shakeInput(input) {
@@ -556,8 +525,7 @@
 
         function createCelebrationConfetti() {
             const colors = ['#fbbf24', '#f59e0b', '#ec4899', '#8b5cf6', '#10b981', '#3b82f6'];
-            
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
@@ -569,18 +537,59 @@
                     confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
                     confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
                     document.body.appendChild(confetti);
-                    
                     setTimeout(() => confetti.remove(), 4000);
-                }, i * 50);
+                }, i * 40);
             }
         }
 
-        // Add enter key support
-        document.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && document.getElementById('page2').classList.contains('page-active')) {
-                confirmarPresenca();
+        function reiniciar() {
+            location.reload();
+        }
+
+        /* Swipe vertical */
+        let touchStartY = 0;
+        let touchStartScrollTop = 0;
+        const SWIPE_MIN = 56;
+
+        document.getElementById('viewport').addEventListener('touchstart', (e) => {
+            touchStartY = e.changedTouches[0].clientY;
+            touchStartScrollTop = page2Scroll ? page2Scroll.scrollTop : 0;
+        }, { passive: true });
+
+        document.getElementById('viewport').addEventListener('touchend', (e) => {
+            const endY = e.changedTouches[0].clientY;
+            const delta = touchStartY - endY;
+            if (Math.abs(delta) < SWIPE_MIN) return;
+
+            if (currentSlide === 1 && page2Scroll) {
+                const scrolled = Math.abs(page2Scroll.scrollTop - touchStartScrollTop) > 12;
+                if (scrolled) return;
+                const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+                if (page2Scroll.contains(el) || page2Scroll === el) {
+                    const st = page2Scroll.scrollTop;
+                    const max = page2Scroll.scrollHeight - page2Scroll.clientHeight;
+                    if (delta > 0 && st < max - 8) return;
+                    if (delta < 0 && st > 8) return;
+                }
             }
+
+            if (delta > 0) goNext();
+            else goPrev();
+        }, { passive: true });
+
+        document.addEventListener('keydown', (e) => {
+            const tag = (e.target && e.target.tagName) || '';
+            if (e.key === 'Enter' && currentSlide === 1) {
+                if (tag === 'TEXTAREA') return;
+                confirmarPresenca();
+                return;
+            }
+            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goNext(); }
+            if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goPrev(); }
         });
+
+        applyTransform();
     </script>
 </body>
 </html>
