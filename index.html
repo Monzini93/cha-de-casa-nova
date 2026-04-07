@@ -81,12 +81,6 @@
         .animate-scale-in { animation: scale-in 0.5s ease-out forwards; }
         .animate-slide-in-right { animation: slide-in-right 0.6s ease-out forwards; }
         
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
         .confetti {
             position: fixed;
             width: 10px;
@@ -178,29 +172,7 @@
         }
         
         .slide-pad-bottom {
-            padding-bottom: calc(6.75rem + env(safe-area-inset-bottom, 0px));
-        }
-        
-        .dot-nav {
-            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-        }
-        
-        .dot-btn {
-            width: 10px;
-            height: 10px;
-            border-radius: 9999px;
-            background: rgba(245, 158, 11, 0.35);
-            transition: transform 0.3s ease, background 0.3s ease, width 0.3s ease;
-        }
-        
-        .dot-btn.active {
-            background: #f59e0b;
-            width: 28px;
-        }
-        
-        .dot-btn:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
         }
     </style>
 </head>
@@ -221,7 +193,7 @@
         <div id="slideTrack" class="flex flex-col w-full">
             <!-- SLIDE 0: Welcome -->
             <section id="slide0" class="slide-panel slide-pad-bottom flex flex-col min-h-0 items-stretch px-4 pt-3 relative z-10 w-full shrink-0">
-                <div class="max-w-2xl w-full mx-auto text-center flex flex-col justify-start min-h-0 flex-1 py-2 overflow-y-auto overscroll-y-contain touch-pan-y no-scrollbar">
+                <div class="w-full px-5 sm:px-10 text-center flex flex-col justify-start min-h-0 flex-1 py-2 overflow-y-auto overscroll-y-contain touch-pan-y no-scrollbar">
                     <div class="mb-4 sm:mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
                         <div class="inline-block animate-bounce-soft">
                             <svg class="w-24 h-24 sm:w-32 sm:h-32 mx-auto house-icon text-amber-500" fill="currentColor" viewBox="0 0 24 24">
@@ -254,18 +226,23 @@
                             Vamos juntos inaugurar esse novo capítulo! 🏠✨
                         </p>
                     </div>
-                    <div class="animate-fade-in-up" style="animation-delay: 0.6s;">
-                        <button type="button" onclick="goToSlide(1)" class="btn-confirm text-white text-lg sm:text-xl font-bold py-4 px-10 sm:py-5 sm:px-12 rounded-full shadow-2xl transform transition-all hover:scale-105">
+                    <div class="animate-fade-in-up space-y-3" style="animation-delay: 0.6s;">
+                        <button type="button" onclick="goToSlide(1)" class="btn-confirm text-white text-lg sm:text-xl font-bold py-4 px-10 sm:py-5 sm:px-12 rounded-full shadow-md transform transition-all hover:scale-105">
                             Confirmar Presença 🎉
                         </button>
-                        <p class="text-gray-500 mt-3 text-xs sm:text-sm">Ou deslize para cima · bolinhas abaixo</p>
+                        <div>
+                            <button type="button" onclick="goToSlide(2)" class="text-amber-700 hover:text-amber-800 font-medium underline text-sm sm:text-base">
+                                Ver lista de confirmados
+                            </button>
+                        </div>
+                        <p class="text-gray-500 mt-3 text-xs sm:text-sm">Ou deslize para cima para continuar</p>
                     </div>
                 </div>
             </section>
 
             <!-- SLIDE 1: Formulário -->
             <section id="slide1" class="slide-panel slide-pad-bottom flex flex-col min-h-0 relative z-10 w-full shrink-0 pt-3">
-                <div class="flex flex-col flex-1 min-h-0 max-w-lg mx-auto w-full px-3 md:px-6">
+                <div class="flex flex-col flex-1 min-h-0 w-full px-5 sm:px-10 max-w-2xl mx-auto">
                     <div class="text-center shrink-0 mb-3 relative">
                         <button type="button" onclick="goToSlide(0)" class="absolute left-0 top-0 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-1 text-sm sm:text-base">
                             <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -275,8 +252,8 @@
                         <p class="text-gray-600 text-xs sm:text-base">Preencha os dados · deslize para mudar de tela</p>
                     </div>
                     <div id="page2Scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y -webkit-overflow-scrolling-touch px-1">
-                        <div class="glass-effect rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl animate-slide-in-right mb-2">
-                            <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="animate-slide-in-right mb-2 pt-1">
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center justify-center gap-2">
                                 <span class="text-2xl">📝</span> Confirme e diga o que vai levar
                             </h3>
                             <div class="space-y-4 mb-4">
@@ -298,7 +275,7 @@
                                 </div>
                             </div>
                             <button type="button" onclick="confirmarPresenca()" id="btnConfirmar"
-                                class="w-full btn-confirm text-white text-lg sm:text-xl font-bold py-4 rounded-xl sm:rounded-2xl shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="w-full btn-confirm text-white text-lg sm:text-xl font-bold py-4 rounded-xl sm:rounded-2xl shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
                                 Confirmar presença 🚀
                             </button>
                             <p class="text-center text-gray-500 mt-3 text-xs sm:text-sm">
@@ -309,9 +286,33 @@
                 </div>
             </section>
 
-            <!-- SLIDE 2: Success -->
+            <!-- SLIDE 2: Lista -->
             <section id="slide2" class="slide-panel slide-pad-bottom flex flex-col min-h-0 justify-start items-center px-4 pt-4 relative z-10 w-full shrink-0 overflow-y-auto overscroll-contain touch-pan-y">
-                <div class="max-w-2xl w-full text-center pb-2">
+                <div class="w-full px-5 sm:px-10 max-w-2xl mx-auto text-center pb-2">
+                    <div class="text-center mb-3 relative">
+                        <button type="button" onclick="goToSlide(0)" class="absolute left-0 top-0 text-gray-500 hover:text-amber-600 transition-colors flex items-center gap-1 text-sm sm:text-base">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            Voltar
+                        </button>
+                        <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-1 font-handwriting pt-8 sm:pt-0">Lista do Chá</h2>
+                        <p class="text-gray-600 text-xs sm:text-base">Veja o que já foi combinado</p>
+                    </div>
+
+                    <div class="mb-6 text-left sm:text-center pt-2 border-t border-amber-200/30">
+                        <div class="text-3xl mb-2 text-center">🎁</div>
+                        <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1 text-center">O que já foi combinado</h3>
+                        <p class="text-xs text-gray-500 text-center mb-4">Lista atualizada com quem já confirmou pelo site.</p>
+                        <div id="listaPresentesEmpty" class="text-center text-gray-500 text-sm py-4">
+                            Ninguém registrou ainda por aqui.
+                        </div>
+                        <ul id="listaPresentes" class="space-y-0 hidden text-left sm:text-center" aria-live="polite"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Success -->
+            <section id="slide3" class="slide-panel slide-pad-bottom flex flex-col min-h-0 justify-start items-center px-4 pt-4 relative z-10 w-full shrink-0 overflow-y-auto overscroll-contain touch-pan-y">
+                <div class="w-full px-5 sm:px-10 max-w-2xl mx-auto text-center pb-2">
                     <div class="mb-4 sm:mb-6 animate-scale-in">
                         <div class="w-24 h-24 sm:w-32 sm:h-32 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3 relative">
                             <svg class="w-12 h-12 sm:w-16 sm:h-16 text-green-500 check-animation" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,17 +323,15 @@
                         <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-1">Presença confirmada!</h2>
                         <p class="text-base sm:text-xl text-gray-600">Obrigado por fazer parte desse momento! 💛</p>
                     </div>
-                    <div class="space-y-3 sm:space-y-4 mb-4 text-left sm:text-center">
-                        <div class="glass-effect rounded-2xl p-4 sm:p-6 animate-fade-in-up shadow-xl" style="animation-delay: 0.2s;">
+                    <div class="space-y-8 sm:space-y-10 mb-6 text-left sm:text-center">
+                        <div class="animate-fade-in-up pt-2 border-t border-amber-200/30" style="animation-delay: 0.2s;">
                             <div class="text-4xl mb-2 text-center">📅</div>
                             <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1">Quando?</h3>
                             <p class="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-600">19 de abril</p>
                             <p class="text-base sm:text-xl text-gray-600">Domingo às <span class="font-bold text-xl text-amber-500">15h</span></p>
-                            <div class="mt-2 inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium">
-                                <span>⏰</span> Não se atrase! 😄
-                            </div>
+                            <p class="mt-3 text-sm text-gray-600"><span class="mr-1">⏰</span> Não se atrase! 😄</p>
                         </div>
-                        <div class="glass-effect rounded-2xl p-4 sm:p-6 animate-fade-in-up shadow-xl" style="animation-delay: 0.4s;">
+                        <div class="animate-fade-in-up pt-2 border-t border-amber-200/30" style="animation-delay: 0.4s;">
                             <div class="text-4xl mb-2 text-center">📍</div>
                             <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1">Onde?</h3>
                             <p class="text-base sm:text-lg md:text-2xl text-gray-700 font-medium mb-3">
@@ -341,23 +340,13 @@
                             </p>
                             <a href="https://www.google.com/maps/search/?api=1&query=Av.+Córrego+do+Jacu,+277,+Itaquera,+São+Paulo"
                                target="_blank" rel="noopener noreferrer"
-                               class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-full font-bold text-sm sm:text-base transition-all transform hover:scale-105 shadow-lg">
+                               class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2.5 rounded-full font-bold text-sm sm:text-base transition-colors">
                                 <span>🗺️</span> Abrir no Google Maps
                             </a>
                         </div>
                     </div>
 
-                    <div class="glass-effect rounded-2xl p-4 sm:p-6 mb-4 text-left shadow-xl border border-white/40">
-                        <div class="text-3xl mb-2 text-center">🎁</div>
-                        <h3 class="text-lg sm:text-2xl font-bold text-gray-800 mb-1 text-center">O que já foi combinado</h3>
-                        <p class="text-xs text-gray-500 text-center mb-4">Lista atualizada com quem já confirmou pelo site.</p>
-                        <div id="listaPresentesEmpty" class="text-center text-gray-500 text-sm py-4">
-                            Ninguém registrou ainda por aqui.
-                        </div>
-                        <ul id="listaPresentes" class="space-y-3 hidden" aria-live="polite"></ul>
-                    </div>
-
-                    <div class="bg-white/50 rounded-2xl p-4 backdrop-blur-sm mb-3">
+                    <div class="mb-4">
                         <p class="text-gray-600 text-sm sm:text-base mb-3">Qualquer dúvida, chama no WhatsApp! 📱</p>
                         <div class="flex justify-center gap-4 flex-wrap">
                             <button type="button" onclick="reiniciar()" class="text-amber-600 hover:text-amber-700 font-medium underline text-sm">
@@ -373,20 +362,13 @@
         </div>
     </div>
 
-    <!-- Indicadores -->
-    <nav class="dot-nav fixed bottom-0 left-0 right-0 z-50 flex justify-center items-center gap-3 bg-gradient-to-t from-orange-50/95 via-amber-50/80 to-transparent pt-6 pointer-events-auto" aria-label="Navegação entre telas">
-        <button type="button" class="dot-btn active" id="dot0" onclick="goToSlide(0)" aria-label="Tela 1 — Boas-vindas" title="Boas-vindas"></button>
-        <button type="button" class="dot-btn" id="dot1" onclick="goToSlide(1)" aria-label="Tela 2 — Formulário" title="Formulário"></button>
-        <button type="button" class="dot-btn" id="dot2" onclick="goToSlide(2)" aria-label="Tela 3 — Confirmação" title="Confirmação" disabled></button>
-    </nav>
-
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
     <script>
-        const TOTAL = 3;
+        const TOTAL = 4;
         let currentSlide = 0;
         let confirmed = false;
 
@@ -429,7 +411,7 @@
             empty.classList.add('hidden');
             ul.classList.remove('hidden');
             ul.innerHTML = list.map((e) => `
-                <li class="bg-white/60 rounded-xl px-4 py-3 border border-amber-100/80 shadow-sm">
+                <li class="py-4 border-b border-amber-200/35 last:border-b-0">
                     <p class="font-semibold text-gray-800 text-sm sm:text-base">${escapeHtml(e.nome || '')}</p>
                     <p class="text-gray-600 text-sm mt-1 whitespace-pre-wrap break-words">${escapeHtml(e.presente || '')}</p>
                 </li>
@@ -438,7 +420,7 @@
 
         function canGoToSlide(index) {
             if (index < 0 || index >= TOTAL) return false;
-            if (index === 2 && !confirmed) return false;
+            if (index === 3 && !confirmed) return false;
             return true;
         }
 
@@ -447,22 +429,24 @@
             if (index === currentSlide) return;
             currentSlide = index;
             applyTransform();
-            for (let i = 0; i < TOTAL; i++) {
-                document.getElementById('dot' + i).classList.toggle('active', i === currentSlide);
-            }
-            document.getElementById('dot2').disabled = !confirmed;
-            if (currentSlide === 2) void renderListaPresentes();
+            if (currentSlide === 2 || currentSlide === 3) void renderListaPresentes();
         }
 
         function goNext() {
-            if (currentSlide < TOTAL - 1 && canGoToSlide(currentSlide + 1)) {
-                goToSlide(currentSlide + 1);
+            for (let i = currentSlide + 1; i < TOTAL; i++) {
+                if (canGoToSlide(i)) {
+                    goToSlide(i);
+                    return;
+                }
             }
         }
 
         function goPrev() {
-            if (currentSlide > 0) {
-                goToSlide(currentSlide - 1);
+            for (let i = currentSlide - 1; i >= 0; i--) {
+                if (canGoToSlide(i)) {
+                    goToSlide(i);
+                    return;
+                }
             }
         }
 
@@ -507,8 +491,7 @@
                     throw new Error(data.error || 'Erro ao salvar');
                 }
                 confirmed = true;
-                document.getElementById('dot2').disabled = false;
-                goToSlide(2);
+                goToSlide(3);
                 createCelebrationConfetti();
             } catch (err) {
                 alert('Não foi possível salvar agora. Verifique a conexão ou tente de novo em instantes.');
